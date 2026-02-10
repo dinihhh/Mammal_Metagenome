@@ -1,0 +1,6 @@
+bowtie2-build --threads 20 host_genomic.fna host_genome
+bowtie2 -p 20 -x host_genome -1 sample_1.fq -2 sample_2.fq -S samplemeta.sam
+samtools view -bS --threads 20 samplemeta.sam > samplemeta.bam
+samtools view -b -f 12 -F 256 samplemeta.bam > samplemeta_unmapped.bam
+samtools sort samplemeta_unmapped.bam -o samplemeta_unmapped_sorted.bam --threads 20
+bedtools bamtofastq -i samplemeta_unmapped_sorted.bam -fq sample_host_removed_1.fq -fq2 sample_host_removed_2.fq
