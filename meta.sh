@@ -11,17 +11,17 @@ seqkit stat seq/*.fastq
 #Trimmomatic
 java -jar Trimmomatic-0.38/trimmomatic-0.38.jar PE -phred33 \
 -threads 8 seq/sample_1.fastq seq/sample_2.fastq \
-Result/sample_1.fq seq/sample_1.unpaired.fastq \
+Result/sample_1.fq Result/sample_1.unpaired.fastq \
 Result/sample_2.fq Result/sample_2.unpaired.fastq \
 LEADING:20 TRAILING:20 \
 SLIDINGWINDOW:4:20 MINLEN:50 \
 ILLUMINACLIP:Trimmomatic-0.38/adapters/TruSeq3-SE.fa:2:30:10
 
 #fastqc/multiqc
-fastqc result/*.fq -t 4
+fastqc Result/*.fq -t 4
 multiqc -d seq/ -o Result/
 
-#Step2:Romove of the host sequences
+#Step2:Host removal
 #Bowtie2
 bowtie2-build --threads 20 host_genomic.fna host_genome
 bowtie2 -p 20 -x host_genome -1 Result/sample_1.fq -2 Result/sample_2.fq -S Result/samplemeta.sam
@@ -41,10 +41,10 @@ bracken -d kraken_database -i Microbe/TEST.report -t 10 -l G -o Microbe/TEST.G.b
 
 #Step4:Assembly
 #Megahit
-time megahit -t 50 
--1 `ls Result/sample_host_removed_1.fq|tr '\n' ','|sed 's/,$//'` 
--2 `ls Result/sample_host_removed_2.fq|tr '\n' ','|sed 's/,$//'` 
---min-contig-len 300 
+time megahit -t 50 \
+-1 `ls Result/sample_host_removed_1.fq|tr '\n' ','|sed 's/,$//'` \
+-2 `ls Result/sample_host_removed_2.fq|tr '\n' ','|sed 's/,$//'` \
+--min-contig-len 300 \
 -o Result/Megahit
 #Assess assembly quality
 ln Result/Megahit/final.contigs.fa Result/Megahit/
@@ -85,7 +85,7 @@ for filename in Result/MAG/sample_binning/sample/*.fa
 do
   base=$(basename $filename .fa)
   echo $base
-  prokka Result/MAG/sample_binning/sample/${base}.fa --outdir Result/MAG/prokka/${base}prokka prefix goldbacteria --kingdom Bacteria
+  prokka Result/MAG/sample_binning/sample/${base}.fa --outdir Result/MAG/prokka/${base}prokka prefix ${base} --kingdom Bacteria
 done
 #KOfam
 mkdir Result/MAG/ko_tmp
@@ -98,7 +98,7 @@ exec_annotation \
 --cpu 6 \
 --tmp-dir Result/MAG/ko_tmp \
 -o Result/MAG/KEGG/ko_out.txt \
-Result/MAG/prokka/prokka/MAG.faa
+Result/MAG/prokka/sample_prokka/sample.faa
 
 
 
