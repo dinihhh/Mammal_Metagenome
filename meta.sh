@@ -23,3 +23,23 @@ multiqc -d seq/ -o Result/
 
 #Step2:Romove of the host sequences
 #Bowtie2
+bowtie2-build --threads 20 host_genomic.fna host_genome
+bowtie2 -p 20 -x host_genome -1 Result/sample_1.fq -2 Result/sample_2.fq -S Result/samplemeta.sam
+samtools view -bS --threads 20 Result/samplemeta.sam > Result/samplemeta.bam
+samtools view -b -f 12 -F 256 Result/samplemeta.bam > Result/samplemeta_unmapped.bam
+samtools sort Result/samplemeta_unmapped.bam -o Result/samplemeta_unmapped_sorted.bam --threads 20
+bedtools bamtofastq -i Result/samplemeta_unmapped_sorted.bam -fq Result/sample_host_removed_1.fq -fq2 Result/sample_host_removed_2.fq
+
+#Step3:Assembly
+
+
+
+
+
+
+
+
+
+
+
+
