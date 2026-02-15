@@ -33,7 +33,7 @@ bedtools bamtofastq -i Result/samplemeta_unmapped_sorted.bam -fq Result/sample_h
 #Step3:Classification 
 #Kraken & Bracken
 mkdir Microbe
-kraken2 --db kraken_database --threads 56 --report Microbe/TEST.report --output Microbe/TEST.output  --paired Result/sample_host_removed_1.fq Result/sample_host_removed_2.fq
+kraken2 --db kraken_database --threads 32 --report Microbe/TEST.report --output Microbe/TEST.output  --paired Result/sample_host_removed_1.fq Result/sample_host_removed_2.fq
 #Phylum level
 bracken -d kraken_database -i Microbe/TEST.report -t 10 -l P -o Microbe/TEST.P.bracken
 #Genus level
@@ -42,8 +42,8 @@ bracken -d kraken_database -i Microbe/TEST.report -t 10 -l G -o Microbe/TEST.G.b
 #Step4:Assembly
 #Megahit
 time megahit -t 50 \
--1 `ls Result/sample_host_removed_1.fq|tr '\n' ','|sed 's/,$//'` \
--2 `ls Result/sample_host_removed_2.fq|tr '\n' ','|sed 's/,$//'` \
+-1 Result/sample_host_removed_1.fq \
+-2 Result/sample_host_removed_2.fq \
 --min-contig-len 300 \
 -o Result/Megahit
 #Assess assembly quality
@@ -76,7 +76,7 @@ time jgi_summarize_bam_contig_depths --outputDepth Result/MAG/sample_final.depth
 time metabat2 -m 1500 -t 16 -i Result/Megahit/final.contigs.fa -a Result/MAG/sample_final.depth.txt -o Result/MAG/sample_binning/sample -v
 #Checkm
 mkdir Result/MAG/checkm
-checkm lineage_wf -t 2 -x fa Result/MAG/sample_binning/sample/ Result/MAG/checkm
+checkm lineage_wf -t 16 -x fa Result/MAG/sample_binning/sample/ Result/MAG/checkm
 
 #Step7:KEGG annotation
 #Prokka
