@@ -7,7 +7,7 @@ This repository contains a complete workflow for metagenomic data analysis, incl
 ## Requirements
 
 - SeqKit
-- Trimmomatic v0.38
+- Trimmomatic
 - FastQC / MultiQC
 - Bowtie2
 - Samtools
