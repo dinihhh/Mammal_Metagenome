@@ -1,7 +1,0 @@
-java -jar Trimmomatic-0.38/trimmomatic-0.38.jar PE -phred33 \
--threads 8 sample_1.fastq sample_2.fastq \
-sample_1.fq sample_1.unpaired.fastq \
-sample_2.fq sample_2.unpaired.fastq \
-LEADING:20 TRAILING:20 \
-SLIDINGWINDOW:4:20 MINLEN:50 \
-ILLUMINACLIP:Trimmomatic-0.38/adapters/TruSeq3-SE.fa:2:30:10
