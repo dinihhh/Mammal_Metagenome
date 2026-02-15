@@ -96,7 +96,6 @@ mkdir Result/MAG/KEGG
 for faa in Result/MAG/prokka/*_prokka/*.faa
 do
   base=$(basename $faa .faa)
-
   exec_annotation \
   -f detail-tsv \
   -E 1e-3 \
