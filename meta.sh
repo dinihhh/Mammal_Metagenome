@@ -15,11 +15,11 @@ Result/sample_1.fq Result/sample_1.unpaired.fastq \
 Result/sample_2.fq Result/sample_2.unpaired.fastq \
 LEADING:20 TRAILING:20 \
 SLIDINGWINDOW:4:20 MINLEN:50 \
-ILLUMINACLIP:Trimmomatic-0.38/adapters/TruSeq3-SE.fa:2:30:10
+ILLUMINACLIP:Trimmomatic-0.38/adapters/TruSeq3-PE.fa:2:30:10
 
 #fastqc/multiqc
 fastqc Result/*.fq -t 4
-multiqc -d seq/ -o Result/
+multiqc -d Result/ -o Result/
 
 #Step2:Host removal
 #Bowtie2
@@ -85,20 +85,28 @@ for filename in Result/MAG/sample_binning/sample/*.fa
 do
   base=$(basename $filename .fa)
   echo $base
-  prokka Result/MAG/sample_binning/sample/${base}.fa --outdir Result/MAG/prokka/${base}prokka prefix ${base} --kingdom Bacteria
+  prokka Result/MAG/sample_binning/sample/${base}.fa \
+  --outdir Result/MAG/prokka/${base}prokka \
+  prefix ${base} 
+  --kingdom Bacteria
 done
 #KOfam
 mkdir Result/MAG/ko_tmp
 mkdir Result/MAG/KEGG
-exec_annotation \
--f detail-tsv \
--E 1e-3 \
---profile KEGG/profiles \
---ko-list KEGG/ko_list \
---cpu 6 \
---tmp-dir Result/MAG/ko_tmp \
--o Result/MAG/KEGG/ko_out.txt \
-Result/MAG/prokka/sample_prokka/sample.faa
+for faa in Result/MAG/prokka/*_prokka/*.faa
+do
+  base=$(basename $faa .faa)
+
+  exec_annotation \
+  -f detail-tsv \
+  -E 1e-3 \
+  --profile KEGG/profiles \
+  --ko-list KEGG/ko_list \
+  --cpu 6 \
+  --tmp-dir Result/MAG/ko_tmp \
+  -o Result/MAG/KEGG/${base}.ko.txt \
+  $faa
+done
 
 
 
