@@ -77,17 +77,9 @@ time metabat2 -m 1500 -t 16 -i Result/Megahit/final.contigs.fa -a Result/MAG/sam
 #Checkm
 mkdir Result/MAG/checkm
 checkm lineage_wf -t 16 -x fa Result/MAG/sample_binning/sample/ Result/MAG/checkm
-checkm qa \
-  -o 2 \
-  --tab_table \
-  Result/MAG/checkm/lineage.ms \
-  Result/MAG/checkm \
-> Result/MAG/checkm/checkm_qa.tsv
-awk -F '\t' 'BEGIN{OFS="\t"} NR>1 {print $1,$6,$7}' Result/MAG/checkm/checkm_qa.tsv > Result/MAG/checkm/genomeInfo_for_drep.tsv
 #dRep
 dRep dereplicate Result/MAG/drep_out \
     -g Result/MAG/sample_binning/sample/*.fa \
-    --genomeInfo Result/MAG/checkm/genomeInfo_for_drep.tsv \
     -p 32 \
     --completeness 90 \
     --contamination 5 \
