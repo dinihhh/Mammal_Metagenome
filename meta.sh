@@ -77,7 +77,6 @@ time metabat2 -m 1500 -t 16 -i Result/Megahit/final.contigs.fa -a Result/MAG/sam
 #Checkm
 mkdir Result/MAG/checkm
 checkm lineage_wf -t 16 -x fa Result/MAG/sample_binning/sample/ Result/MAG/checkm
-
 #dRep
 dRep dereplicate Result/MAG/drep_out \
     -g Result/MAG/sample_binning/sample/*.fa \
