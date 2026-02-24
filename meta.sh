@@ -87,13 +87,16 @@ dRep dereplicate Result/MAG/drep_out \
     -sa 0.95
 #CoverM
 coverm genome \
-  -d Result/MAG/drep_out/dereplicated_genomes \
-  -1 Result/${SAMPLE}_host_removed_1.fq \
-  -2 Result/${SAMPLE}_host_removed_2.fq \
-  -p minimap2 \
-  -t 32 \
+  --genome-fasta-directory Result/MAG/drep_out/dereplicated_genomes \
+  --genome-fasta-extension fa \
+  --coupled Result/${SAMPLE}_host_removed_1.fq Result/${SAMPLE}_host_removed_2.fq \
+  --mapper minimap2-sr \
   --methods relative_abundance \
-> Result/MAG/${SAMPLE}_abundance.tsv
+  --min-read-percent-identity 95 \
+  --min-read-aligned-percent 75 \
+  --min-covered-fraction 0.3 \
+  --threads 16 \
+  -o Result/MAG/${SAMPLE}_abundance.tsv
 
 #Step7:KEGG annotation
 #Prokka
