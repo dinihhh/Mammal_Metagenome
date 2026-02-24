@@ -49,6 +49,8 @@ This repository contains a complete workflow for metagenomic data analysis, incl
 - Bowtie2 read mapping
 - MetaBAT2 binning
 - CheckM quality assessment
+- Genome dereplication using dRep
+- Relative abundance calculation using CoverM
 
 ### 7. MAG Functional Annotation
 - Prokka annotation of MAGs
